@@ -39,12 +39,13 @@
         var tmp = new Date($(this).html());
         $(this).parent().css("background-color", "#e6e6e6");
         $(this).parent().next().css("background-color", "#e6e6e6");
+        
         if (now.getTime() < tmp.getTime()){
             $(this).parent().prev().css("background-color", "");
             $(this).parent().prev().prev().css("background-color", "");
             $(this).parent().css("background-color", "");
             $(this).parent().next().css("background-color", "");
-            $(this).parent().prev().prev().attr("id", "selected_item");
+            $(this).parent().prev().prev().attr("id", "scroll_to");
 
             //Return terminates the iteration function
             return false;
@@ -80,7 +81,7 @@
     //Scroll to current table row
     $(document).ready(function(){
         if (scroll == 1)
-            $('html, body').animate({ scrollTop: $("#selected_item").offset().top }, 1000);
+            $('html, body').animate({ scrollTop: $("#scroll_to").offset().top }, 1000);
     });
 
 })();
