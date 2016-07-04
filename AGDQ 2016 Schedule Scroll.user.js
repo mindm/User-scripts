@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AGDQ 2016 Schedule Scroll
 // @namespace    http://tampermonkey.net/
-// @version      0.31
+// @version      0.32
 // @description  Scrolls to currently played game and greys out passed games.
 // @author       MindM
 // @match        https://gamesdonequick.com/schedule*
