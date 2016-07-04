@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AGDQ 2016 Schedule Scroll
 // @namespace    http://tampermonkey.net/
-// @version      0.2
+// @version      0.3
 // @description  Scrolls to currently played game and greys out passed games.
 // @author       MindM
 // @match        https://gamesdonequick.com/schedule*
@@ -17,7 +17,7 @@
     var now = new Date();
     var scroll;
 
-    //Is scrolling enabled?
+    //Is scrolling enabled? 
     if( GM_getValue("scroll", 1) == 1){
         scroll = 1;
     } else {
