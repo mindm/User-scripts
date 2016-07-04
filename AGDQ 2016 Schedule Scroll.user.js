@@ -17,13 +17,16 @@
     'use strict';
 
     var now = new Date();
-    var scroll;
+    var scroll = 1;
 
+    try {
     //Is scrolling enabled?
     if( GM_getValue("scroll", 1) == 1){
         scroll = 1;
     } else {
         scroll = 0;
+    }} catch(err) {
+        console.log("You might need to install Tampermonkey/Greasemonkey for this script to work correctly");
     }
 
     //DEBUG
