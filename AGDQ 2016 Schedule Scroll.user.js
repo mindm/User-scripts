@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AGDQ 2016 Schedule Scroll
 // @namespace    http://tampermonkey.net/
-// @version      0.33
+// @version      0.34
 // @description  Scrolls to currently played game and greys out passed games.
 // @author       MindM
 // @match        https://gamesdonequick.com/schedule*
@@ -18,6 +18,8 @@
 
     var now = new Date();
     var scroll = 1;
+    var activecolor = "#ccffe6";
+    //var activecolor = "#f2ffcc";
 
     try {
     //Is scrolling enabled?
@@ -41,8 +43,8 @@
         $(this).parent().next().css("background-color", "#e6e6e6");
         
         if (now.getTime() < tmp.getTime()){
-            $(this).parent().prev().css("background-color", "");
-            $(this).parent().prev().prev().css("background-color", "");
+            $(this).parent().prev().css("background-color", activecolor);
+            $(this).parent().prev().prev().css("background-color", activecolor);
             $(this).parent().css("background-color", "");
             $(this).parent().next().css("background-color", "");
             $(this).parent().prev().prev().attr("id", "scroll_to");
