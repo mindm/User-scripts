@@ -1,13 +1,14 @@
 // ==UserScript==
 // @name         AGDQ 2016 Schedule Scroll
 // @namespace    http://tampermonkey.net/
-// @version      0.3
+// @version      0.31
 // @description  Scrolls to currently played game and greys out passed games.
 // @author       MindM
 // @match        https://gamesdonequick.com/schedule*
 // @grant        GM_getValue
 // @grant        GM_setValue
 // @require      http://code.jquery.com/jquery-latest.js
+// @run-at       document-body
 // @downloadURL  https://github.com/mindm/User-scripts/raw/master/AGDQ%202016%20Schedule%20Scroll.user.js
 // @updateURL    https://github.com/mindm/User-scripts/raw/master/AGDQ%202016%20Schedule%20Scroll.user.js
 // ==/UserScript==
@@ -18,12 +19,16 @@
     var now = new Date();
     var scroll;
 
-    //Is scrolling enabled? 
+    //Is scrolling enabled?
     if( GM_getValue("scroll", 1) == 1){
         scroll = 1;
     } else {
         scroll = 0;
     }
+
+    //DEBUG
+    //console.log(now);
+    //console.log(new Date($('td.start-time').eq(1).html()));
 
     //Iterate through tables datetimes to find out the current game
     // and grey out past games
