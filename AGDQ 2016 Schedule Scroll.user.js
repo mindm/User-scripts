@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AGDQ 2016 Schedule Scroll
 // @namespace    http://tampermonkey.net/
-// @version      0.34
+// @version      0.35
 // @description  Scrolls to currently played game and greys out passed games.
 // @author       MindM
 // @match        https://gamesdonequick.com/schedule*
@@ -13,12 +13,46 @@
 // @updateURL    https://github.com/mindm/User-scripts/raw/master/AGDQ%202016%20Schedule%20Scroll.user.js
 // ==/UserScript==
 
+
+function scrollToCurrent(scroll_){
+    if (scroll_ == 1)
+        $('html, body').animate({ scrollTop: $("#scroll_to").offset().top }, 1000);
+}
+
+function colors(){
+    //Iterate through tables datetimes to find out the current game
+    // and grey out past games
+    var now = new Date();
+    $('td.start-time').each(function(index){
+        var tmp = new Date($(this).html());
+        $(this).parent().css("background-color", passedcolor);
+        $(this).parent().next().css("background-color", passedcolor);
+        
+        if (now.getTime() < tmp.getTime()){
+            $(this).parent().prev().css("background-color", activecolor);
+            $(this).parent().prev().prev().css("background-color", activecolor);
+            $(this).parent().css("background-color", "");
+            $(this).parent().next().css("background-color", "");
+            $(this).parent().prev().prev().attr("id", "scroll_to");
+
+            //Return terminates the iteration function
+            return false;
+        }
+
+    });
+}
+
+function createInput(text){
+    var $input = $('<tr><td></td><td><input onclick="toggleScroll()" id="scrollbutton" type="button" value="'+text+'" /></td><td></td></tr>');
+    $input.appendTo($("#runTable"));
+}
+
 (function() {
     'use strict';
 
-    var now = new Date();
     var scroll = 1;
-    var activecolor = "#ccffe6";
+    window.passedcolor = "#e6e6e6";
+    window.activecolor = "#ccffe6";
     //var activecolor = "#f2ffcc";
 
     try {
@@ -35,32 +69,9 @@
     //console.log(now);
     //console.log(new Date($('td.start-time').eq(1).html()));
 
-    //Iterate through tables datetimes to find out the current game
-    // and grey out past games
-    $('td.start-time').each(function(index){
-        var tmp = new Date($(this).html());
-        $(this).parent().css("background-color", "#e6e6e6");
-        $(this).parent().next().css("background-color", "#e6e6e6");
-        
-        if (now.getTime() < tmp.getTime()){
-            $(this).parent().prev().css("background-color", activecolor);
-            $(this).parent().prev().prev().css("background-color", activecolor);
-            $(this).parent().css("background-color", "");
-            $(this).parent().next().css("background-color", "");
-            $(this).parent().prev().prev().attr("id", "scroll_to");
-
-            //Return terminates the iteration function
-            return false;
-        }
-
-    });
+    colors();
 
     //Create a button where the user can disable scrolling
-    function createInput(text){
-        var $input = $('<tr><td></td><td><input onclick="toggleScroll()" id="scrollbutton" type="button" value="'+text+'" /></td><td></td></tr>');
-        $input.appendTo($("#runTable"));
-    }
-
     if (scroll){
         createInput("Disable scrolling");
     } else {
@@ -82,8 +93,7 @@
 
     //Scroll to current table row
     $(document).ready(function(){
-        if (scroll == 1)
-            $('html, body').animate({ scrollTop: $("#scroll_to").offset().top }, 1000);
+        scrollToCurrent(scroll);
     });
 
 })();
