@@ -1,7 +1,7 @@
 // ==UserScript==
 // @name         AGDQ 2016 Schedule Scroll
 // @namespace    http://tampermonkey.net/
-// @version      0.35
+// @version      0.4
 // @description  Scrolls to currently played game and greys out passed games.
 // @author       MindM
 // @match        https://gamesdonequick.com/schedule*
@@ -42,6 +42,41 @@ function colors(){
     });
 }
 
+function colors2(){
+    var now = new Date();
+    console.log("Last refresh at " + now.getHours() +
+               ":" + now.getMinutes());
+    for(i = 0; i < g_times.length; i++){
+        //console.log(i);
+        if(now.getTime() > g_times[i].getTime()) {
+            $('td.start-time').eq(i).parent().css("background-color", passedcolor);
+            $('td.start-time').eq(i).parent().next().css("background-color", passedcolor);
+            
+            
+        } else {
+            $('td.start-time').eq(i).parent().prev().css("background-color", activecolor);
+            $('td.start-time').eq(i).parent().prev().prev().css("background-color", activecolor);
+            $('td.start-time').eq(i).parent().css("background-color", "");
+            $('td.start-time').eq(i).parent().next().css("background-color", "");
+            $('td.start-time').eq(i).parent().prev().prev().attr("id", "scroll_to");
+            g_curr = i;
+            break;
+        }
+    }
+}
+
+function updateCurrent(){
+    var now = new Date();
+    //console.log(now.getTime());
+    //console.log(g_times[g_curr].getTime());
+    //console.log("---------");
+    if (now.getTime() > g_times[g_curr].getTime()){
+        //g_curr++;
+        //alert("Change");
+        location.reload();
+    }
+}
+
 function createInput(text){
     var $input = $('<tr><td></td><td><input onclick="toggleScroll()" id="scrollbutton" type="button" value="'+text+'" /></td><td></td></tr>');
     $input.appendTo($("#runTable"));
@@ -53,8 +88,9 @@ function createInput(text){
     var scroll = 1;
     window.passedcolor = "#e6e6e6";
     window.activecolor = "#ccffe6";
-    //var activecolor = "#f2ffcc";
-
+    window.g_times = [];
+    window.g_curr = undefined;
+    
     try {
     //Is scrolling enabled?
     if( GM_getValue("scroll", 1) == 1){
@@ -64,12 +100,18 @@ function createInput(text){
     }} catch(err) {
         console.log("You might need to install Tampermonkey/Greasemonkey for this script to work correctly");
     }
+    
+    //Create times array values
+    $('td.start-time').each(function(index){
+        g_times[index] = new Date($(this).html());
+    });
 
     //DEBUG
     //console.log(now);
     //console.log(new Date($('td.start-time').eq(1).html()));
 
-    colors();
+    //colors();
+    colors2();
 
     //Create a button where the user can disable scrolling
     if (scroll){
@@ -95,5 +137,9 @@ function createInput(text){
     $(document).ready(function(){
         scrollToCurrent(scroll);
     });
+    
+    setInterval(function(){ 
+        updateCurrent();   
+    }, 60000);
 
 })();
