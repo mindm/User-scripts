@@ -29,5 +29,3 @@
     waitForKeyElements ("div.yt-lockup-channel div.yt-lockup-content h3 a", redirect);
     
 })();
-
-//https://pastee.org/dke83 passu=javascript
